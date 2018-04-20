@@ -4,6 +4,7 @@ import com.adidas.kafka.util.KafkaProperties;
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.IntegerSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.junit.Assert;
 
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -13,7 +14,7 @@ public class Producer extends Thread {
     private final String topic;
     private final Boolean isAsync;
 
-    private final int NUM_MESSAGES = 1000;
+    private final int NUM_MESSAGES = 100;
 
     /**
      *
@@ -97,6 +98,7 @@ class DemoCallBack implements Callback {
                             "offset(" + metadata.offset() + ") in " + elapsedTime + " ms");
         } else {
             exception.printStackTrace();
+            Assert.fail("Fail to sent message");
         }
     }
 }

@@ -6,7 +6,6 @@
  * user guide available at https://docs.gradle.org/3.3/userguide/tutorial_java_projects.html
  */
 
-
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
 apply plugin: 'net.serenity-bdd.aggregator'
@@ -18,16 +17,16 @@ targetCompatibility = 1.8
 repositories {
     // Use 'jcenter' for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
-    //jcenter()
+    jcenter()
     //mavenLocal()
-    mavenCentral()
+    //mavenCentral()
 }
 
 buildscript {
     repositories {
-        //jcenter()
+        jcenter()
         //mavenLocal()
-        mavenCentral()
+        //mavenCentral()
     }
     dependencies {
         classpath("net.serenity-bdd:serenity-gradle-plugin:1.9.6")
@@ -40,7 +39,13 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.21'
 
     //Kafka
-    compile group: 'org.apache.kafka', name: 'kafka_2.9.2', version: '0.8.0'
+    //compile group: 'org.apache.kafka', name: 'kafka_2.9.2', version: '0.8.0'
+    compile('org.apache.kafka:kafka_2.9.2:0.8.0') {
+        exclude module: 'jms'
+        exclude module: 'jmxtools'
+        exclude module: 'jmxri'
+    }
+
     compile group: 'org.apache.kafka', name: 'kafka-clients', version: '1.1.0'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
@@ -53,12 +58,7 @@ dependencies {
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
     // 'test.useTestNG()' to your build script.
     testCompile group: 'junit', name: 'junit', version: '4.12'
-
-    compile group: 'com.sun.jdmk', name: 'jmxtools', version: '1.2.1'
-    compile group: 'javax.management', name: 'jmxri', version: '1.2.1'
-
 }
-
 
 // Allow build to continue on test failure
 gradle.startParameter.continueOnFailure = true
@@ -68,6 +68,6 @@ test {
     testLogging.showStandardStreams = true
     // turn off html reports... windows can't handle certain cucumber test name characters.
     test.reports.getHtml().enabled = false
-    test.reports.junitXml.enabled= false
+    test.reports.junitXml.enabled = false
     include 'com/adidas/serenityRunner/TestRunner.class'
 }
