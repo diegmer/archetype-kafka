@@ -39,3 +39,4 @@ build/resources/test/
 build/test-results/
 build/tmp/
 history/
+!/gradle/wrapper/gradle-wrapper.jar

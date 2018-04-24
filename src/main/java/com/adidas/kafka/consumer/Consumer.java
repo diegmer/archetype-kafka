@@ -8,6 +8,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.Assert;
 
+import java.io.IOException;
+import java.net.ConnectException;
 import java.util.Collections;
 import java.util.Properties;
 
@@ -37,12 +39,11 @@ public class Consumer extends ShutdownableThread {
     }
 
     @Override
-    public void doWork() {
+    public void doWork(){
         consumer.subscribe(Collections.singletonList(this.topic));
         ConsumerRecords<Integer, String> records = consumer.poll(1000);
         Assert.assertEquals(1, records.count());
         for (ConsumerRecord<Integer, String> record : records) {
-
             System.out.println("Received message: (" + record.key() + ", " + record.value() + ") at offset " + record.offset());
         }
     }

@@ -13,7 +13,8 @@ public class ExampleDefinitions {
 
     @Given("^kafka cluster has kafka nodes \"([^\"]*)\" and zookeeper nodes \"([^\"]*)\"$")
     public void kafkaClusterHasKafkaNodesAndZookeeperNodes(String kafkaNode, String zookeeperNode) throws Throwable {
-        System.out.println("Hello");
+        exampleSteps.kakfaServerIsUp(kafkaNode);
+        //exampleSteps.zooKeeperServerIsUp(zookeeperNode);
     }
 
     @When("^a producer sends a message to \"([^\"]*)\"$")
