@@ -6,23 +6,24 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.PartitionInfo;
 import org.junit.Assert;
 
-import java.io.IOException;
-import java.net.ConnectException;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class Consumer extends ShutdownableThread {
     private final KafkaConsumer<Integer, String> consumer;
     private final String topic;
 
-    public Consumer(String topic) {
-        super("KafkaConsumerExample", false);
+    public Consumer(String topic, String group) {
+        super(KafkaProperties.KAFKA_PRODUCTER_CLIENT_ID, false);
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaProperties.KAFKA_SERVER_URL + ":" + KafkaProperties.KAFKA_SERVER_PORT);
         //A unique string that identifies the consumer group this consumer belongs to
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "ExampleConsumer");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, group);
         //If true the consumer's offset will be periodically committed in the background.
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
         //The frequency in milliseconds that the consumer offsets are auto-committed to Kafka
@@ -39,13 +40,19 @@ public class Consumer extends ShutdownableThread {
     }
 
     @Override
-    public void doWork(){
+    public void doWork() {
         consumer.subscribe(Collections.singletonList(this.topic));
+        //poll() -> it returns records written to Kafka that consumers in our group have not read yet
+        //ConsumerRecords<Integer, String> records = consumer.poll(10000);
         ConsumerRecords<Integer, String> records = consumer.poll(1000);
-        Assert.assertEquals(1, records.count());
-        for (ConsumerRecord<Integer, String> record : records) {
-            System.out.println("Received message: (" + record.key() + ", " + record.value() + ") at offset " + record.offset());
+        if (!records.isEmpty()) {
+            for (ConsumerRecord<Integer, String> record : records) {
+                System.out.println("Received message: (" + record.key() + ", " + record.value() + ") at offset " + record.offset());
+            }
+        } else {
+            Assert.fail("There is not records to read");
         }
+
     }
 
     @Override
@@ -57,4 +64,13 @@ public class Consumer extends ShutdownableThread {
     public boolean isInterruptible() {
         return false;
     }
+
+    /**
+     * @return
+     */
+    public Map<String, List<PartitionInfo>> getListTopics() {
+        return consumer.listTopics();
+    }
+
+
 }

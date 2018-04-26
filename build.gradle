@@ -45,7 +45,6 @@ dependencies {
         exclude module: 'jmxtools'
         exclude module: 'jmxri'
     }
-
     compile group: 'org.apache.kafka', name: 'kafka-clients', version: '1.1.0'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
@@ -58,6 +57,8 @@ dependencies {
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
     // 'test.useTestNG()' to your build script.
     testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    compile 'org.influxdb:influxdb-java:2.9'
 }
 
 // Allow build to continue on test failure

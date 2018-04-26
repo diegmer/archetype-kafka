@@ -25,7 +25,7 @@ public class Producer extends Thread {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaProperties.KAFKA_SERVER_URL + ":" + KafkaProperties.KAFKA_SERVER_PORT);
         //An id string to pass to the server when making requests
-        props.put(ProducerConfig.CLIENT_ID_CONFIG, "ExampleProducer");
+        props.put(ProducerConfig.CLIENT_ID_CONFIG, KafkaProperties.KAFKA_PRODUCTER_CLIENT_ID);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, IntegerSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         producer = new KafkaProducer<>(props);
@@ -64,6 +64,7 @@ public class Producer extends Thread {
             ++messageNo;
         }
         //DMH
+        producer.flush();
         producer.close();
     }
 }
